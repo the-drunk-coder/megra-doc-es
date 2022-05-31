@@ -1,1 +1,28 @@
-site_name: Mégra Documentation
+site_name: Documentación Mégra
+site_url: https://megra-doc.readthedocs.io/es/latest
+nav:
+    - 'Inicio' : 'index.md'
+    - 'Guía del usuario' :
+        - 'Instalación' : 'installation.md'
+        - 'Configuracíon de Audio' : 'audio-configuration.md'
+        - 'Carpetas importantes' : 'folders.md'
+        - 'Como usar Samples' : 'using-samples.md'
+    - 'Tutorial':
+        - '1. Prueba de Sonido' : 'tutorial/soundcheck.md'
+        - '2. Generador de secuencias & Contextos' : 'tutorial/sequence-generators-and-contexts.md'
+        - '3. Tipos de generadores de secuencias' : 'tutorial/sequence-generator-types.md'
+        - '4. Modificar el flujo de eventos' : 'tutorial/modifying-the-event-stream.md'
+        - '5. Modificar generadores de secuencias' : 'tutorial/modifying-sequence-generators.md'
+        - '6. Poner generadores en capas' : 'tutorial/multiplying-generators.md'
+        - '7. Partes y eventos de control' : 'tutorial/parts-and-control-events.md'
+        - '8. Fin' : 'tutorial/final-remarks.md'
+    - 'Referencia de Funciones' :
+        - 'Eventos de conido y control' : 'function-reference/sound-events.md'
+        - 'Generadores de secuencias' : 'function-reference/sequence-generators.md'
+        - 'Modificadores de generadores' : 'function-reference/generator-modifiers.md'
+        - 'Multiplicadores de generadores' : 'function-reference/generator-multiplyers.md'
+        - 'Modificadores discretos de parametros' : 'function-reference/discrete-parameter-modifiers.md'
+        - 'Aplicadores' : 'function-reference/applicators.md'
+        - 'Comandos globales' : 'function-reference/global-commands.md'
+theme:
+    name: readthedocs    
