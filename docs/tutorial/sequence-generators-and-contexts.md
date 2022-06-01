@@ -14,7 +14,7 @@ Todo lo que sigue son **generadores de secuencia**. Un **generador de secuencias
 ;; Este es un contexto de sincronización. Captura los eventos de sonido generados por los generadores de secuencia.
 ;; Los nombres en Mégra comienzan con ', por lo que el nombre aquí es solo 'contexto'. Esto se hereda de
 ;; familia Lisp de lenguajes de programación.
-;; El indicador (booleano) es #t (verdadero) o #f (falso) y determina si el contexto
+;; El indicador (booleano) es #t (verdadero, true) o #f (falso) y determina si el contexto
 ;; esta activo o no.
 
 (sx 'context #t ;; <-- sx <name> <flag>
@@ -26,7 +26,7 @@ Por defecto, los nuevos generadores (que no estaban presentes en el contexto ant
 en un **evento no silencioso**.
 
 ```lisp
-(sx 'context #t ;; <-- set this to #f to mute this context !
+(sx 'context #t ;; <-- ¡pon esto en #f para silenciar este contexto!
   (cyc 'percussion-generator "~ ~ ~ risset:'a5 ~ ~ risset:'c6 ~")
   (cyc 'bassline-generator "saw:'a1 ~ saw:'ds2 saw:'e2 ~ ~ saw:'c3 ~")
   (cyc 'beat-generator "bd ~ hats ~ sn ~ hats ~")) 
@@ -35,11 +35,11 @@ en un **evento no silencioso**.
 También puede sincronizar varios contextos:
 
 ```lisp
-(sx 'context-a #t ;; <-- execute this first
+(sx 'context-a #t ;; <-- ejecutar esto primero
   (cyc 'percussion-generator "~ ~ ~ risset:'a5 ~ ~ risset:'c6 ~")
   (cyc 'beat-generator "bd ~ hats ~ sn ~ hats ~"))
 
-(sx 'context-b #t :sync 'context-a ;; <-- execute this when you deem fit 
+(sx 'context-b #t :sync 'context-a ;; <-- ejecuta esto cuando lo creas conveniente
   (cyc 'bassline-generator "saw:'a1 ~ saw:'ds2 saw:'e2 ~ ~ saw:'c3 ~"))
 
 (clear) ;; clear stops everything
@@ -49,22 +49,22 @@ Hay más cosas geniales que puedes hacer solo con el contexto de sincronización
 **soloing** y **blocking**:
 
 ```lisp
-(sx 'context #t :solo 'beat-generator ;; <-- You can solo single generators ...
+(sx 'context #t :solo 'beat-generator ;; <-- puede solo generadores individuales...
   (cyc 'percussion-generator "~ ~ ~ risset:'a5 ~ ~ risset:'c6 ~")
   (cyc 'bassline-generator "saw:'a1 ~ saw:'ds2 saw:'e2 ~ ~ saw:'c3 ~")
   (cyc 'beat-generator "bd ~ hats ~ sn ~ hats ~"))
 
-(sx 'context #t :block 'beat-generator ;; <-- ... or block them!
+(sx 'context #t :block 'beat-generator ;; <-- ... o bloquearlos!
   (cyc 'percussion-generator "~ ~ ~ risset:'a5 ~ ~ risset:'c6 ~")
   (cyc 'bassline-generator "saw:'a1 ~ saw:'ds2 saw:'e2 ~ ~ saw:'c3 ~")
   (cyc 'beat-generator "bd ~ hats ~ sn ~ hats ~"))
 
-(sx 'context #t :block 'sn ;; <-- You can also block or solo a special event types.
+(sx 'context #t :block 'sn ;; <-- También puede bloquear o solo un tipo de evento especial.
   (cyc 'percussion-generator "~ ~ ~ risset:'a5 ~ ~ risset:'c6 ~")
   (cyc 'bassline-generator "saw:'a1 ~ saw:'ds2 saw:'e2 ~ ~ saw:'c3 ~")
   (cyc 'beat-generator "bd ~ hats ~ sn ~ hats ~"))
 
-(sx 'context #t :solo 'sn 'risset ;; <-- You can also block or solo multiple tags.
+(sx 'context #t :solo 'sn 'risset ;; <-- También puede bloquear o solo varias etiquetas.
   (cyc 'percussion-generator "~ ~ ~ risset:'a5 ~ ~ risset:'c6 ~")
   (cyc 'bassline-generator "saw:'a1 ~ saw:'ds2 saw:'e2 ~ ~ saw:'c3 ~")
   (cyc 'beat-generator "bd ~ hats ~ sn ~ hats ~"))

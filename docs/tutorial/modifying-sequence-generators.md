@@ -1,19 +1,19 @@
-# Modifying Sequence Generators
+# Modificación de generadores de secuencias
 
-One of Mégra's interesting features is that you can modify the generators themselves, or their execution speed and order, again, both over discrete time (steps) and probabilistically.
+Una de las características interesantes de Mégra es que puedes modificar los propios generadores, o su velocidad y orden de ejecución, nuevamente, tanto en tiempo discreto (pasos) como probabilísticamente.
 
-For a full list of modifiers that can be applied, see the "Generator Modifiers" section in the function reference.
+Para obtener una lista completa de los modificadores que se pueden aplicar, consulte la sección "Modificadores del generador" en la referencia de la función.
 
-## apple - probability-based
+## apple - basado en la probabilidad
 
 ```lisp
 (sx 'ba #t 
-  (apple :p 20 (haste 2 0.5) ;; <-- with a probability of 20%, speed up for 2 steps, cut the duration in half
+  (apple :p 20 (haste 2 0.5) ;; <-- con una probabilidad del 20%, acelerar en 2 pasos, reducir la duración a la mitad
     (cyc 'go "sqr:120 sqr:180 ~ sqr:80")))
 ```
 
-This only modifies the execution speed. You can also modify execution order.
-In the following example, we skip ahead 2 steps with a chance of 9%, or rewind 2 steps with a chance of 10%
+Esto solo modifica la velocidad de ejecución. También puede modificar el orden de ejecución.
+En el siguiente ejemplo, saltamos 2 pasos hacia adelante con una probabilidad del 9% o retrocedemos 2 pasos con una probabilidad del 10%.
 
 ```lisp
 (sx 'ba #t 
@@ -21,28 +21,28 @@ In the following example, we skip ahead 2 steps with a chance of 9%, or rewind 2
     (cyc 'go "sqr:120 sqr:180 ~ sqr:80")))
 ```
 
-Finally, you can modify the generator itself by adding new information based on its history:
+Finalmente, puede modificar el generador en sí agregando nueva información basada en su historial:
 
 ```
 (sx 'ba #t
   (apple :p 10 (grow 0.5 :method 'flower) 
-    (cyc 'ta "sqr:'c2 sqr:'a3 sqr:'e3 sqr:'f4"))) ;; <-- you can use note names !
+    (cyc 'ta "sqr:'c2 sqr:'a3 sqr:'e3 sqr:'f4"))) ;; <-- puedes usar nombres de notas !
 ```
 
-The 'grow' function takes a sound event from the generator, adds a certain amount of variation (the first argument, wheren 0.0 means no variation and 1.0 means a lot of variation).
+La función 'grow' toma un evento de sonido del generador, agrega una cierta cantidad de variación (el primer argumento, donde 0.0 significa que no hay variación y 1.0 significa mucha variación).
 
-Let it run for a while and then check what it looks like:
+Déjelo correr por un tiempo y luego verifique cómo se ve:
 
 ```
 (export-dot "grown" :live 'ba 'ta)
 ```
 
-## every - step-based
+## every - basado en pasos
 
-The step-based version actually fills both roles:
+La versión basada en pasos en realidad cumple ambos roles:
 
 ```lisp
 (sx 'ba #t 
-  (every :n 12 (haste 2 0.5) ;; <-- every 12 steps, speed up for 2 steps, cut the duration in half
+  (every :n 12 (haste 2 0.5) ;; <-- cada 12 pasos, acelerar por 2 pasos, reducir la duración a la mitad
     (cyc 'go "sqr:120 sqr:180 ~ sqr:80")))
 ```

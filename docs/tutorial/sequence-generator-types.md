@@ -1,92 +1,89 @@
-# Sequence Generator Types
+# Tipos de generadores de secuencias
 
-If the sync context is a sink for events, then we need a source. That's what 
-the sequence generators are for.
-We've already seen one type of generator, the cycle generator. There are several more.
-Each sequence generator is fundamentally a *Markov chain* that behaves in a certain way,
-depending on how it is created. A sequence generator can behave **non-deterministically**, but
-doesn't necessarily have to.
+Si el contexto de sincronización es un receptor de eventos, entonces necesitamos una fuente. Eso es lo que
+los generadores de secuencia son para.
+Ya hemos visto un tipo de generador, el generador de ciclo. Hay varios más.
+Cada generador de secuencias es fundamentalmente una *cadena de Markov* que se comporta de cierta manera,
+dependiendo de cómo se cree. Un generador de secuencias puede comportarse de forma **no determinista**, pero
+no necesariamente tiene que hacerlo.
 
 **TIP:**
-You can visualize the Markov chains, as they can easily be represented as a graph.
-For that end, you need graphviz (https://graphviz.org/) installed! (more later as we go)
+Puede visualizar las cadenas de Markov, ya que se pueden representar fácilmente como un gráfico.
+¡Para ese fin, necesita graphviz (https://graphviz.org/) instalado! (más adelante a medida que avanzamos)
 
-Let's look at some generators now. For a complete list, see the 'Sequence Generator' section
-in the function reference below. As already mentioned, each generator needs an identifier.
-This is so that we can adress them for visualization, and keep their state over the 
-various executions.
+Veamos algunos generadores ahora. Para obtener una lista completa, consulte la sección 'Generador de secuencias'
+en la función de referencia a continuación. Como ya se mencionó, cada generador necesita un identificador.
+Esto es para que podamos dirigirnos a ellos para su visualización y mantener su estado sobre el
+varias ejecuciones.
 
-## The Nucleus Generator
+## El generador de núcleo
 
-.. or 'nuc', for short ...
+.. o 'nuc', para abreviar ...
 
 ```lisp
-(sx 'ctx #t ;; <-- a continous beep
-  (nuc 'core :dur 400 ;; <-- this keyword argument controls the time interval. 
-  ;; It can be used with all sequence generators!
+(sx 'ctx #t ;; <-- pitido continuo
+  (nuc 'core :dur 400 ;; <-- este argumento de palabra clave controla el intervalo de tiempo.
+  ;; ¡Se puede utilizar con todos los generadores de secuencias!
     (sine 440)
-    ;;(sine 885) ;; <-- you can pass one or many events, uncomment to try
+    ;;(sine 885) ;; <-- puedes pasar uno o varios eventos, descomentar para probar
     ))
 
 (clear)
 ```
 
-This is the most simple generator, it just repeats the events it is given over and over at a steady time interval. Each generator has a bunch of keyword arguments, as you can see above.
+Este es el generador más simple, simplemente repite los eventos que se le dan una y otra vez en un intervalo de tiempo constante. Cada generador tiene un montón de argumentos de palabras clave, como puede ver arriba.
 
-## The Cycle Generator
+## El generador de ciclos
 
-We've already seen this above in the introduction of contexts. The cyc generator creates, you've guessed it, cycles, even though there's more to it, as we will see.
+Ya hemos visto esto anteriormente en la introducción de contextos. El generador cyc crea, lo has adivinado, ciclos, aunque hay más, como veremos.
 
 ```lisp
-;; Here's a basic cycle:
+;; Aquí hay un ciclo básico:
 (sx 'trololo #t ;; <-- there's no need to name every context 'context' ... you don't use 'password' for all your passwords, do you ?
   (cyc 'bells "risset:'a4 ~ risset:'a6 ~ risset:'a4 ~ risset:'c5 risset:'e5"))
 ```
 
 ```lisp
-;; If you want the generator to be faster, you can modify the time interval:
-(sx 'trololo # ;; much faster
+;; Si quieres que el generador sea más rápido, puedes modificar el intervalo de tiempo:
+(sx 'trololo # ;; mucho mas rapido !
   (cyc 'bells :dur 100 "risset:'a4 ~ risset:'a6 ~ risset:'a4 ~ risset:'c5 risset:'e5"))
 
-(sx 'trololo # ;; way slower !
+(sx 'trololo # ;; mucho mas lento !
   (cyc 'bells :dur 400 "risset:'a4 ~ risset:'a6 ~ risset:'a4 ~ risset:'c5 risset:'e5")) 
 ```
 
-The 'cyc' function takes a string as an argument that describes a cycle. If you already know TidalCycles, the concept is borrowed from that. It is a little sequencing language of its own. 
+La función 'cyc' toma una cadena como argumento que describe un ciclo. Si ya conoce TidalCycles, el concepto se toma prestado de eso. Es un pequeño lenguaje de secuenciación propio.
 
-So far everything has been very deterministic, so what's all the stochastic talk in the readme about ?
-Well, take a look at this:
+Hasta ahora todo ha sido muy determinista, entonces, ¿de qué se trata toda la charla estocástica en el archivo Léame?
+Bueno, echa un vistazo a esto:
 
 ```lisp
 (sx 'trololo #t 
   (cyc 'bells :rep 70 :max-rep 4 "risset:'a4 ~ risset:'a6 ~ risset:'a4 ~ risset:'c5 risset:'e5")) 
 ```
 
-Doesn't sound as predictable, does it ? So what do the keyword arguments do ? The 'rep' keyword defines
-the chance of an event to be repeated (70% chance in this case). The 'max-rep' keyword specifies the 
-maximum number of repetitions.  
+No suena tan predecible, ¿verdad? Entonces, ¿qué hacen los argumentos de palabras clave? La palabra clave 'rep' define
+la probabilidad de que un evento se repita (70% de probabilidad en este caso). La palabra clave 'max-rep' especifica el número máximo de repeticiones.
 
-For the sake of visualization, let's reduce the number of repetitions:
+Por el bien de la visualización, reduzcamos el número de repeticiones:
 
 ```lisp
 (sx 'trololo #t 
   (cyc 'bells :rep 70 :max-rep 2 "risset:'a4 ~ risset:'a6 ~ risset:'a4 ~ risset:'c5 risset:'e5")) 
 ```
 
-Now, let's see what this markov chain looks like as a graph:
+Ahora, veamos cómo se ve esta cadena de Markov como un gráfico:
 
 ```lisp
 (export-dot "trololo" :live 'trololo 'bells)
 ```
 
-You'll now find a file called "trololo_trololo_bells.dot" in the folder you started Mégra from.
-Run `$ neato -Tsvg trololo_trololo_bells.dot -o trololo_trololo_bells.svg` to render an SVG file that you
-can run in your browser. You should see the markov chain represented as a graph, where you can see all
-the repetitions, etc. Try different settings and see what they look like !
+Ahora encontrará un archivo llamado "trololo_trololo_bells.dot" en la carpeta desde la que inició Mégra.
+Ejecute `$ neato -Tsvg trololo_trololo_bells.dot -o trololo_trololo_bells.svg` para generar un archivo SVG que se puede ver en su navegador. Deberías ver la cadena de markov representada como un gráfico, donde puedes ver todos
+las repeticiones, etc. ¡Pruebe diferentes configuraciones y vea cómo se ven!
 
-Because of its capacity to create repetetive sequences, the cyc generator is perfect for creating 
-beats and so on. 
-For a full description, see the entry in the function reference !
+Por su capacidad para crear secuencias repetitivas, el generador cyc es perfecto para crear latidos y así sucesivamente.
+Para obtener una descripción completa, consulte la entrada en la referencia de la función.
 
 ## The Inference Generator
 
